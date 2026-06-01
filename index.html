@@ -10,20 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <script defer src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-  <script>
-    window.mapboxgl = window.maplibregl;
-    
-    // Suppress harmless AbortError console noise when panning the map
-    window.addEventListener('unhandledrejection', function(event) {
-      if (event.reason && event.reason.name === 'AbortError') {
-        event.preventDefault();
-      }
-    });
-    
-    // Polyfill for maplibregl.accessToken
-    window.maplibregl = window.maplibregl || {};
-    window.maplibregl.accessToken = '';
-  </script>
+  <script defer src="./js/polyfill.js"></script>
   
   <!-- Mapbox Compare Plugin (compatible with MapLibre) -->
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css" />
