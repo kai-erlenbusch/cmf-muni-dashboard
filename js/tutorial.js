@@ -4,7 +4,7 @@ export const tutorialSteps = [
     content: `
       <div style="display: flex; gap: 30px; align-items: center;">
         <div style="flex: 1.5; text-align: center;">
-          <img src="./CMF_Logo.png" alt="CMF Logo" style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));" />
+          <img src="./assets/CMF_Logo.png" alt="CMF Logo" style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));" />
           <div style="margin-top: 24px; text-align: left; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
             <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #fff; font-size: 13px;">
               <input type="checkbox" id="tutorial-dont-show-again" style="width: 16px; height: 16px; cursor: pointer;">
