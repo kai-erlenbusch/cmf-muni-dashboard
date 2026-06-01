@@ -1256,10 +1256,19 @@ export function flyToDistrictSbs(geoid, side) {
   const doFit = () => {
     if (districtBBoxes && districtBBoxes[geoid]) {
       const bbox = districtBBoxes[geoid].bounds;
+      
+      let padBottom = 50;
+      const leftMenu = document.getElementById('bottom-compare-left-menu');
+      const rightMenu = document.getElementById('bottom-compare-right-menu');
+      if ((leftMenu && !leftMenu.classList.contains('hidden')) || 
+          (rightMenu && !rightMenu.classList.contains('hidden'))) {
+        padBottom = 250;
+      }
+      
       targetMap.stop();
       targetMap.fitBounds(
         [[bbox[0], bbox[1]], [bbox[2], bbox[3]]],
-        { padding: { top: 50, bottom: 50, left: 50, right: 50 }, maxZoom: 8, duration: 1200 }
+        { padding: { top: 50, bottom: padBottom, left: 50, right: 50 }, maxZoom: 8, duration: 1200 }
       );
     }
   };
@@ -1286,10 +1295,19 @@ function fitFeatureBounds(feature, targetMap = map) {
     // so the slider can be used to compare its left and right sides.
     padLeft = 50;
     padRight = 50;
+    const leftMenu = document.getElementById('bottom-compare-left-menu');
+    const rightMenu = document.getElementById('bottom-compare-right-menu');
+    if ((leftMenu && !leftMenu.classList.contains('hidden')) || (rightMenu && !rightMenu.classList.contains('hidden'))) {
+      padBottom = 250;
+    }
   } else {
     // If sidebar is collapsed in national view, right pad can be smaller, but 400 is safe for right details panel
     const rightDetails = document.getElementById('details-sidebar');
     padRight = (rightDetails && !rightDetails.classList.contains('hidden')) ? 400 : 50;
+    const bottomMenu = document.getElementById('bottom-radial-menu');
+    if (bottomMenu && !bottomMenu.classList.contains('hidden')) {
+      padBottom = 250;
+    }
   }
 
   if (geoid && districtBBoxes && districtBBoxes[geoid]) {
