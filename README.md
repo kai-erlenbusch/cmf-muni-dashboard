@@ -84,14 +84,3 @@ Alternatively, if you have Node.js installed, you can use Vite or `http-server`:
 ```bash
 npx http-server . -p 8000
 ```
-
-## Deployment
-
-Since the architecture relies on static files and serverless `pmtiles`, the application is fully optimized to be deployed on static hosting platforms like **GitHub Pages**, **Vercel**, or **Netlify**.
-
-**To deploy to GitHub Pages:**
-1. Push this repository to a GitHub account.
-2. Navigate to the repository's **Settings > Pages**.
-3. Under "Build and deployment", set the source to **Deploy from a branch**.
-4. Select the `main` branch and the `/ (root)` folder, then click **Save**.
-5. The application will be live at `https://<your-username>.github.io/<repo-name>/`.
