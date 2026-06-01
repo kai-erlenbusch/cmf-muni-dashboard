@@ -672,11 +672,7 @@ function bindEvents() {
   if (timeSelect) {
     timeSelect.addEventListener('change', () => {
       state.setDataPeriod(timeSelect.value);
-      if (state.selectedDistrict) {
-        state.setSelectedDistrict(null);
-        highlightSelected(null);
-      }
-      resetMapView();
+      updateAllViews();
     });
   }
 
@@ -1425,13 +1421,7 @@ function renderTimeSliderGraph() {
         state.timelineInteracted = state.timelineInteracted || {};
         state.timelineInteracted[targetSide] = true;
         
-        if (state.selectedDistrict) {
-            state.setSelectedDistrict(null);
-            highlightSelected(null);
-            resetMapView();
-        } else {
-            updateAllViews();
-        }
+        updateAllViews();
       };
     }
   });
