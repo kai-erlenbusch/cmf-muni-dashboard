@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Congressional District Health Dashboard</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script defer src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <script>
+    window.mapboxgl = window.maplibregl;
+    
+    // Suppress harmless AbortError console noise when panning the map
+    window.addEventListener('unhandledrejection', function(event) {
+      if (event.reason && event.reason.name === 'AbortError') {
+        event.preventDefault();
+      }
+    });
+    
+    // Polyfill for maplibregl.accessToken
+    window.maplibregl = window.maplibregl || {};
+    window.maplibregl.accessToken = '';
+  </script>
+  
+  <!-- Mapbox Compare Plugin (compatible with MapLibre) -->
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css" />
+  <script defer src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+  
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  
+  <!-- PMTiles library -->
+  <script defer src="https://unpkg.com/pmtiles@3.0.5/dist/pmtiles.js"></script>
+  <script defer src="https://d3js.org/d3.v7.min.js"></script>
+  
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    .hidden {
+      display: none;
+    }
+    .custom-tooltip-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      z-index: 9999;
+    }
+    .custom-tooltip-container:hover .custom-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(-50%) translateX(10px);
+    }
+    .custom-tooltip {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        margin: 0;
+        transform: translateY(-50%) translateX(5px);
+        width: 220px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+      color: var(--text-main);
+      text-transform: none;
+      z-index: 99999;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Left Sidebar Navigation -->
+      <aside class="sidebar-left" id="sidebar-left">
+        <style>
+          .sidebar-toggle-btn:hover .custom-tooltip {
+            opacity: 1;
+            visibility: visible;
+          }
+        </style>
+        <button id="left-sidebar-toggle" class="sidebar-toggle-btn">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span class="custom-tooltip glass-panel" style="left: 40px; top: 50%; transform: translateY(-50%); width: max-content; text-align: center; font-size: 14px; margin: 0; padding: 6px 12px; letter-spacing: 0.5px;">Toggle menu</span>
+        </button>
+      <div class="sidebar-header" style="padding: 16px 24px;">
+        <h2 style="margin: 0;">Congressional District Municipal Bond Explorer</h2>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button id="home-btn" class="glass-panel" style="flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.05); color: var(--text-primary); cursor: pointer; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s;">Home</button>
+          <button id="tutorial-btn" class="glass-panel" style="flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--glass-border); background: rgba(232, 108, 74, 0.1); color: #e86c4a; cursor: pointer; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s;">Tutorial</button>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <!-- Segmented Control for Mode -->
+        <div class="segmented-control" style="font-size: 11px;">
+          <input type="radio" id="mode-bonds" name="sidebar-mode" value="bonds" checked>
+          <label for="mode-bonds">Bonds</label>
+          <input type="radio" id="mode-esg" name="sidebar-mode" value="esg">
+          <label for="mode-esg">Health</label>
+          <input type="radio" id="mode-compare" name="sidebar-mode" value="compare">
+          <label for="mode-compare">Compare</label>
+        </div>
+
+        <!-- Municipal Bonds Mode Controls -->
+        <div id="bonds-controls" class="control-section">
+          <div class="filter-group">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label class="filter-label" style="margin: 0;">BOND METRICS</label>
+              <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="custom-tooltip glass-panel">Select a metric to view its geographic distribution across congressional districts.</span>
+              </span>
+            </div>
+            <div class="metric-buttons">
+              <button class="metric-btn active" data-metric="Total_Inv_Value">Total Investment Value</button>
+              <button class="metric-btn" data-metric="Total_Issuers">Total Issuers</button>
+              <button class="metric-btn" data-metric="Small_Borrowers">Small Borrowers</button>
+              <button class="metric-btn" data-metric="Sub_State_Inv_Value">Sub-State Investment</button>
+              <button class="metric-btn" data-metric="Sub_State_Sav_Value">District Taxpayer Savings</button>
+              <button class="metric-btn" data-metric="Small_Borrowers_Pct">Small Borrowers Percent (%)</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label for="proceeds-category" class="filter-label" style="margin: 0;">USE OF PROCEEDS</label>
+              <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="custom-tooltip glass-panel">Filter bonds by specific funding purposes like Education, Healthcare, or Transportation.</span>
+              </span>
+            </div>
+            <div class="select-wrapper">
+              <select id="proceeds-category" class="custom-select">
+                <option value="">Select a Category...</option>
+                <option value="Proceeds_Education_Total">Education</option>
+                <option value="Proceeds_Healthcare_Total">Healthcare & Human Services</option>
+                <option value="Proceeds_Housing_Total">Housing</option>
+                <option value="Proceeds_Utilities_Total">Utilities & Environment</option>
+                <option value="Proceeds_Transportation_Total">Transportation</option>
+                <option value="Proceeds_Infrastructure_Total">Infrastructure & Public Facilities</option>
+                <option value="Proceeds_Economic_Dev_Total">Economic & Commercial Development</option>
+                <option value="Proceeds_Recreation_Total">Recreation & Culture</option>
+                <option value="Proceeds_Other_Total">Other / Unclassified</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESG Mode Controls -->
+        <div id="esg-controls" class="control-section hidden" style="display: none;">
+          <div class="filter-group">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <label for="esg-category" class="filter-label" style="margin: 0;">CATEGORY</label>
+              <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="custom-tooltip glass-panel">Select a broad health category to filter the available metrics.</span>
+              </span>
+            </div>
+            <div class="select-wrapper">
+              <select id="esg-category" class="custom-select">
+                <option value="outcomes">Health Outcomes</option>
+                <option value="socioeconomic">Social and Economic Factors</option>
+                <option value="behaviors">Health Behavior</option>
+                <option value="environment">Physical Environment</option>
+                <option value="care">Clinical Care</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <label for="esg-metric" class="filter-label" style="margin: 0;">METRIC</label>
+              <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="custom-tooltip glass-panel">Choose a specific health outcome or factor to map.</span>
+              </span>
+            </div>
+            <div class="select-wrapper">
+              <select id="esg-metric" class="custom-select">
+                <!-- Dynamically populated based on category -->
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-group" id="time-period-group">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <label for="time-period-select" class="filter-label" style="margin: 0;">TIME PERIOD</label>
+              <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="custom-tooltip glass-panel">View data for a specific year. Availability varies by metric.</span>
+              </span>
+            </div>
+            <div class="select-wrapper">
+              <select id="time-period-select" class="custom-select">
+                <!-- Dynamically populated based on available metric periods -->
+              </select>
+            </div>
+          </div>
+          
+          <div class="filter-group" id="metric-about-group">
+            <label class="filter-label" style="color: #0C98BA; font-size: 14px; letter-spacing: 1px;">ABOUT METRIC &amp; SOURCE</label>
+            <div id="metric-description-text" style="font-size: 14px; color: var(--text-main); line-height: 1.5; margin-top: 8px; margin-bottom: 12px; font-weight: 500;">
+              <!-- Description populates here -->
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="custom-tooltip-container" id="metric-source-tooltip-trigger" style="cursor: help; position: relative; display: inline-flex;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255, 255, 255, 0.7)"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+                  <span class="custom-tooltip glass-panel" style="width: 320px; white-space: normal; padding: 16px; font-weight: normal; font-size: 14px; line-height: 1.5; z-index: 9999; text-transform: none; letter-spacing: normal;" id="metric-source-tooltip">
+                    <!-- Populates here -->
+                  </span>
+                </span>
+              </span>
+              <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Data Source Info</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compare Mode Controls -->
+        <div id="compare-controls" class="control-section hidden" style="display: none;">
+          <p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 16px 0; line-height: 1.4;">
+            Select variables for the left and right maps to discover geographic correlations. Drag the center slider to compare.
+          </p>
+          
+          <div class="compare-mode-toggle" style="display: flex; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 8px; margin-bottom: 20px;">
+            <button id="compare-toggle-swipe" class="compare-toggle-btn active" data-mode="swipe" style="flex: 1; padding: 6px; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;">SWIPE</button>
+            <button id="compare-toggle-sbs" class="compare-toggle-btn" data-mode="sbs" style="flex: 1; padding: 6px; background: transparent; color: var(--text-secondary); border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;">SIDE-BY-SIDE</button>
+          </div>
+
+          <div id="compare-swipe-controls">
+            <div class="filter-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label class="filter-label" style="color: #02D4FF; margin: 0;">LEFT MAP</label>
+                <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <span class="custom-tooltip glass-panel">Configure the data layer displayed on the left side of the split screen.</span>
+                </span>
+              </div>
+              <button id="reset-left-map" class="reset-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: rgba(255, 255, 255, 0.7); font-size: 10px; cursor: pointer; text-transform: uppercase; padding: 2px 6px; transition: all 0.2s ease;">RESET</button>
+            </div>
+            <div class="select-wrapper" style="margin-bottom: 8px;">
+              <select id="compare-left-source" class="custom-select">
+                <option value="bonds">Municipal Bonds</option>
+                <option value="esg">Health, Climate, and Census</option>
+              </select>
+            </div>
+            <div class="select-wrapper" style="margin-bottom: 8px;">
+              <select id="compare-left-category" class="custom-select">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="compare-left-metric" class="custom-select">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+          
+          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 16px 0;">
+          
+          <div class="filter-group">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label class="filter-label" style="color: #ff9100; margin: 0;">RIGHT MAP</label>
+                <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <span class="custom-tooltip glass-panel">Configure the data layer displayed on the right side of the split screen.</span>
+                </span>
+              </div>
+              <button id="reset-right-map" class="reset-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: rgba(255, 255, 255, 0.7); font-size: 10px; cursor: pointer; text-transform: uppercase; padding: 2px 6px; transition: all 0.2s ease;">RESET</button>
+            </div>
+            <div class="select-wrapper" style="margin-bottom: 8px;">
+              <select id="compare-right-source" class="custom-select">
+                <option value="bonds">Municipal Bonds</option>
+                <option value="esg" selected>Health, Climate, and Census</option>
+              </select>
+            </div>
+            <div class="select-wrapper" style="margin-bottom: 8px;">
+              <select id="compare-right-category" class="custom-select">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="compare-right-metric" class="custom-select">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+          </div> <!-- End swipe controls -->
+
+
+
+        </div>
+      </div>
+      <div class="sidebar-footer" id="bonds-sidebar-footer" style="padding: 16px 24px; border-top: 1px solid var(--glass-border); font-size: 11px; color: var(--text-muted); line-height: 1.4; background: rgba(0,0,0,0.1);">
+        <div style="color: #0C98BA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-size: 11px;">Source &amp; Acknowledgments</div>
+        <div style="margin-top: 4px;">Congressional Municipal Data prepared by the Center for Municipal Finance at the University of Chicago. The data is provided by <a href="https://www.ice.com/fixed-income-data-services/ice-climate-analytics-for-municipal-debt" target="_blank" style="color: #02D4FF; text-decoration: none;">Intercontinental Exchange, Inc. (ICE) Data Services</a> for informational purposes only. Data is current as of <strong>January 23, 2025</strong>.<br><br>For questions or comments, see <a href="https://munifinance.uchicago.edu" target="_blank" style="color: #02D4FF; text-decoration: none;">munifinance.uchicago.edu</a> or contact Justin Marlowe (<a href="mailto:jmarlowe@uchicago.edu" style="color: #02D4FF; text-decoration: none;">jmarlowe@uchicago.edu</a>).</div>
+        <div style="margin-top: 12px; display: flex; justify-content: center;">
+          <a href="https://munifinance.uchicago.edu/" target="_blank">
+            <img src="./assets/CMF_Logo.png" alt="CMF Logo" style="max-width: 220px; opacity: 0.9;" loading="lazy">
+          </a>
+        </div>
+      </div>
+      <div class="sidebar-footer" id="esg-sidebar-footer" style="padding: 16px 24px; border-top: 1px solid var(--glass-border); font-size: 11px; color: var(--text-muted); line-height: 1.4; background: rgba(0,0,0,0.1); display: none;">
+        <div style="color: #0C98BA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-size: 11px;">Source &amp; Acknowledgments</div>
+        <div>Congressional District Health Data Sourced From:</div>
+        <div style="margin-top: 4px;">Department of Population Health, NYU Langone Health. Congressional District Health Dashboard.<br><a href="https://www.congressionaldistricthealthdashboard.org/" target="_blank" style="color: #02D4FF; text-decoration: none; word-break: break-word;">https://www.congressionaldistricthealthdashboard.org/</a><br>Accessed &amp; Data Current as of: <strong>[2026-05-21]</strong>.</div>
+        <div style="margin-top: 12px; display: flex; justify-content: center;">
+          <a href="https://www.congressionaldistricthealthdashboard.org/" target="_blank">
+            <img src="./assets/CDHD_Logo_Mark.png" alt="CDHD Logo" style="max-width: 220px; opacity: 0.9;" loading="lazy">
+          </a>
+        </div>
+      </div>
+      <div class="sidebar-footer" id="compare-sidebar-footer" style="padding: 16px 24px; border-top: 1px solid var(--glass-border); font-size: 11px; color: var(--text-muted); line-height: 1.4; background: rgba(0,0,0,0.1); display: none;">
+        <div style="color: #0C98BA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-size: 11px;">Source &amp; Acknowledgments</div>
+        <div style="margin-top: 4px;">Health Data From: Department of Population Health, NYU Langone Health. <a href="https://www.congressionaldistricthealthdashboard.org/" target="_blank" style="color: #02D4FF; text-decoration: none;">Congressional District Health Dashboard</a>. Accessed &amp; Data Current as of: [2026-05-21]<br><br>Municipal Bond Data From: Center for Municipal Finance at the University of Chicago, provided by <a href="https://www.ice.com/fixed-income-data-services/ice-climate-analytics-for-municipal-debt" target="_blank" style="color: #02D4FF; text-decoration: none;">Intercontinental Exchange, Inc. (ICE)</a> for informational purposes only. Data current as of January 23, 2025.</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      
+      <!-- Top Navigation (Tabs) -->
+      <nav class="top-nav glass-panel">
+        <button class="tab-btn active" data-tab="maps">Maps</button>
+        <button class="tab-btn" data-tab="insights">Insights</button>
+        <button class="tab-btn" data-tab="charts">Charts</button>
+      </nav>
+
+      <!-- View: MAPS -->
+      <div id="view-maps" class="view-container active">
+        <!-- Bottom Radial Menu Container -->
+        <div id="bottom-radial-menu" class="hidden">
+          <div class="radial-dock glass-panel" id="radial-dock-container">
+            <!-- Dynamically injected radial menu groups will go here -->
+          </div>
+        </div>
+
+        <!-- Left Compare Menu Container -->
+        <div id="bottom-compare-left-menu" class="hidden" style="position: absolute; bottom: 20px; left: 280px; z-index: 50; transition: opacity 0.3s ease, transform 0.3s ease, left 0.3s ease; display: flex; gap: 10px;">
+          <div class="radial-dock glass-panel" id="compare-left-dock-container">
+          </div>
+        </div>
+        
+        <!-- Right Compare Menu Container -->
+        <div id="bottom-compare-right-menu" class="hidden" style="position: absolute; bottom: 20px; right: 180px; z-index: 50; transition: opacity 0.3s ease, transform 0.3s ease; display: flex; gap: 10px;">
+          <div class="radial-dock glass-panel" id="compare-right-dock-container">
+          </div>
+        </div>
+
+        <div id="map-container">
+          <div id="map-controls-overlay">
+            <div class="search-box" style="display: flex; gap: 8px; align-items: center;">
+              <div style="position: relative; flex: 1;">
+                <input type="text" id="district-search" placeholder="Search District (e.g., California 1st)" autocomplete="off" class="glass-panel" style="width: 100%; border: 1px solid var(--glass-border); padding: 10px; border-radius: 6px; background: var(--glass-bg); color: var(--text-primary);" />
+                <div id="search-results" class="search-results hidden glass-panel"></div>
+              </div>
+            </div>
+          </div>
+          <div id="map"></div>
+          <div id="map-compare"></div>
+          
+          <!-- Top Floating Legends for Compare Mode -->
+          <div id="compare-legends-top" class="hidden" style="position: absolute; top: 16px; left: 16px; right: 16px; z-index: 10; justify-content: space-between; pointer-events: none; align-items: flex-start;">
+            <div id="compare-legend-left" class="glass-panel" style="pointer-events: auto; flex: 1; min-width: 200px; max-width: 400px; margin-right: 20px; padding: 12px;"></div>
+            <div id="compare-legend-right" class="glass-panel" style="pointer-events: auto; flex: 1; min-width: 200px; max-width: 400px; margin-left: 20px; padding: 12px;"></div>
+          </div>
+          <!-- Subgroup Filter Window -->
+          <div id="subgroup-window-container" class="glass-panel" style="position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 99; width: max-content; max-width: 90vw; padding: 16px 24px; display: none; flex-direction: column; align-items: center; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div id="subgroup-window-drag-handle" style="width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: grab; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div id="subgroup-window-header" style="font-size: 12px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px;">CATEGORY</div>
+                <style>
+                  .subgroup-info-icon:hover .subgroup-tooltip {
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                  }
+                </style>
+                <div class="subgroup-info-icon" style="position: relative; display: inline-flex; cursor: help; align-items: center;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <div id="subgroup-window-tooltip" class="subgroup-tooltip glass-panel" style="position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 200px; padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 500; line-height: 1.4; color: #fff; border-radius: 8px; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.2s; z-index: 99999; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                    Filter data by this category. Window can be dragged.
+                  </div>
+                </div>
+              </div>
+              <button id="close-subgroup-window" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 16px; padding: 0 4px; border-radius: 4px; line-height: 1;">&times;</button>
+            </div>
+            <div id="subgroup-window-items" class="grid-popup" style="width: 100%; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; position: static; visibility: visible; opacity: 1; transform: none; background: none; border: none; padding: 0;">
+            </div>
+          </div>
+
+          <!-- Time Slider Graph Tool (Main) -->
+          <div id="time-slider-container-main" class="glass-panel time-slider-container" style="position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 100; width: 400px; padding: 16px 20px; display: none; flex-direction: column; align-items: center; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: bottom 0.3s ease;">
+            <div id="time-slider-drag-handle-main" class="time-slider-drag-handle" style="width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: grab; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div id="time-slider-header-main" style="font-size: 11px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0px;">Time Series: U.S. Average</div>
+                <style>
+                  .ts-info-icon:hover .ts-tooltip {
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                  }
+                </style>
+                <div class="ts-info-icon" style="position: relative; display: inline-flex; cursor: help; align-items: center;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <div class="ts-tooltip glass-panel" style="position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 200px; padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 500; line-height: 1.4; color: #fff; border-radius: 8px; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.2s; z-index: 99999; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                    Filter data by time below. Window can be dragged.
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="close-time-slider" data-target="main" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 16px; padding: 0 4px; border-radius: 4px; line-height: 1;">&times;</button>
+              </div>
+            </div>
+            <div id="time-slider-graph-main" style="width: 100%; height: 70px; margin-bottom: 0px;"></div>
+            <input type="range" id="time-slider-main" min="0" max="100" value="0" style="width: 100%; cursor: pointer;">
+          </div>
+
+          <!-- Time Slider Graph Tool (Left) -->
+          <div id="time-slider-container-left" class="glass-panel time-slider-container" style="position: absolute; bottom: 80px; left: 35%; transform: translateX(-50%); z-index: 100; width: 400px; padding: 16px 20px; display: none; flex-direction: column; align-items: center; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: bottom 0.3s ease, left 0.3s ease;">
+            <div id="time-slider-drag-handle-left" class="time-slider-drag-handle" style="width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: grab; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div id="time-slider-header-left" style="font-size: 11px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0px;">Time Series: U.S. Average</div>
+                <div class="ts-info-icon" style="position: relative; display: inline-flex; cursor: help; align-items: center;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <div class="ts-tooltip glass-panel" style="position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 200px; padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 500; line-height: 1.4; color: #fff; border-radius: 8px; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.2s; z-index: 99999; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                    Filter data by time below. Window can be dragged.
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="hide-all-time-sliders" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 0;">Hide All</button>
+                <button class="close-time-slider" data-target="left" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 16px; padding: 0 4px; border-radius: 4px; line-height: 1;">&times;</button>
+              </div>
+            </div>
+            <div id="time-slider-graph-left" style="width: 100%; height: 70px; margin-bottom: 0px;"></div>
+            <input type="range" id="time-slider-left" min="0" max="100" value="0" style="width: 100%; cursor: pointer;">
+          </div>
+
+          <!-- Time Slider Graph Tool (Right) -->
+          <div id="time-slider-container-right" class="glass-panel time-slider-container" style="position: absolute; bottom: 80px; left: auto; right: -60px; transform: translateX(-50%); z-index: 100; width: 400px; padding: 16px 20px; display: none; flex-direction: column; align-items: center; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: bottom 0.3s ease, right 0.3s ease;">
+            <div id="time-slider-drag-handle-right" class="time-slider-drag-handle" style="width: 100%; display: flex; justify-content: space-between; align-items: center; cursor: grab; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div id="time-slider-header-right" style="font-size: 11px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0px;">Time Series: U.S. Average</div>
+                <div class="ts-info-icon" style="position: relative; display: inline-flex; cursor: help; align-items: center;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <div class="ts-tooltip glass-panel" style="position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 200px; padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 500; line-height: 1.4; color: #fff; border-radius: 8px; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.2s; z-index: 99999; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                    Filter data by time below. Window can be dragged.
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="hide-all-time-sliders" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 0;">Hide All</button>
+                <button class="close-time-slider" data-target="right" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 16px; padding: 0 4px; border-radius: 4px; line-height: 1;">&times;</button>
+              </div>
+            </div>
+            <div id="time-slider-graph-right" style="width: 100%; height: 70px; margin-bottom: 0px;"></div>
+            <input type="range" id="time-slider-right" min="0" max="100" value="0" style="width: 100%; cursor: pointer;">
+          </div>
+
+          <!-- Inset Maps for Alaska and Hawaii -->
+          <div class="inset-maps-container" style="position: absolute; bottom: 20px; left: 20px; z-index: 10; display: flex; gap: 12px; pointer-events: none;">
+             <div style="text-align: center; pointer-events: auto;">
+               <div id="map-alaska" class="glass-panel" style="width: 110px; height: 110px; border-radius: 50%; overflow: hidden; border: 2px solid var(--glass-border); background: var(--bg-dark); cursor: pointer;"></div>
+               <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 6px; display: block; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Alaska</span>
+             </div>
+             <div style="text-align: center; pointer-events: auto;">
+               <div id="map-hawaii" class="glass-panel" style="width: 110px; height: 110px; border-radius: 50%; overflow: hidden; border: 2px solid var(--glass-border); background: var(--bg-dark); cursor: pointer;"></div>
+               <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 6px; display: block; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Hawaii</span>
+             </div>
+          </div>
+
+          <!-- Compare Mode Country View Button -->
+          <div id="compare-country-view-btn-container" class="hidden" style="position: absolute; bottom: 30px; right: 20px; z-index: 10; pointer-events: auto;">
+            <button id="compare-country-view-btn" class="glass-panel" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: rgba(0, 0, 0, 0.7); border: 1px solid var(--glass-border); color: #fff; cursor: pointer; transition: all 0.2s; font-weight: 600; font-size: 14px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              Country View
+            </button>
+          </div>
+
+          <div id="map-tooltip" class="hidden glass-panel">
+            <h4 id="tooltip-title">District</h4>
+            <div id="tooltip-content">Hover over a district</div>
+          </div>
+          <div id="map-tooltip-compare" class="hidden glass-panel">
+            <h4 id="tooltip-title-compare">District</h4>
+            <div id="tooltip-content-compare">Hover over a district</div>
+          </div>
+        </div>  
+        <button id="toggle-details-btn" class="details-toggle glass-panel">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Details
+        </button>
+      </div>
+
+      <!-- View: CHARTS -->
+      <div id="view-charts" class="view-container">
+        <div id="charts-empty-state" class="charts-empty-state" style="width: 100%; height: 100%; min-height: 600px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <div style="padding: 20px 0; text-align: center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px; opacity: 0.8;"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+            <h2 style="margin: 0; font-size: 24px; color: var(--text-primary);">Select a District to View Charts</h2>
+            <p style="margin: 10px 0 0; color: var(--text-secondary); max-width: 400px; line-height: 1.5;">Click on any congressional district on the map to see its detailed demographics, bond issuance history, and use of proceeds analysis.</p>
+          </div>
+        </div>
+        
+        <div id="charts-dashboard" class="charts-dashboard" style="display: none; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 50px; padding-right: 15px;">
+          <div class="charts-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+              <h2 id="charts-district-title" style="margin: 0; font-size: 24px; color: var(--text-primary);">District Overview</h2>
+              <p id="charts-district-subtitle" style="margin: 5px 0 0; color: var(--text-secondary);">District Demographics and Investment Overview</p>
+              <div id="charts-health-subtitle" style="display: none; margin: 8px 0 0; font-size: 13px; color: var(--text-secondary); max-width: 800px; line-height: 1.4;">
+                <strong>Health Data From:</strong> Department of Population Health, NYU Langone Health. <a href="https://www.congressionaldistricthealthdashboard.org/" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">Congressional District Health Dashboard</a>. Accessed &amp; Data Current as of: <strong style="color: var(--accent-cyan);">(05/21/2026)</strong>.
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <button id="btn-national-view-charts" class="insights-top-btn" style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-secondary)'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                National View
+              </button>
+              <button id="btn-go-district-charts" class="insights-top-btn" style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-secondary)'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+                Go to District
+              </button>
+            </div>
+          </div>
+          
+          <div class="kpi-cards-container" style="flex-shrink: 0;">
+            <div id="kpi-card-1" class="kpi-card glass-panel">
+              <div id="kpi-title-1" class="kpi-title">Total Investment Value<div class="glass-tooltip-container info-icon">i<div class="glass-tooltip">Total municipal bond investments</div></div></div>
+              <div id="kpi-val-1" class="kpi-value">$0.00</div>
+              <div id="kpi-sub-1" class="kpi-subtitle">N/A percentile</div>
+            </div>
+            <div id="kpi-card-2" class="kpi-card glass-panel">
+              <div id="kpi-title-2" class="kpi-title">Total Issuers<div class="glass-tooltip-container info-icon">i<div class="glass-tooltip">Number of municipal bond issuers</div></div></div>
+              <div id="kpi-val-2" class="kpi-value">0</div>
+              <div id="kpi-sub-2" class="kpi-subtitle">N/A percentile</div>
+            </div>
+            <div id="kpi-card-3" class="kpi-card glass-panel">
+              <div id="kpi-title-3" class="kpi-title">Small Borrowers<div class="glass-tooltip-container info-icon">i<div class="glass-tooltip">Number of small borrowers</div></div></div>
+              <div id="kpi-val-3" class="kpi-value">0</div>
+              <div id="kpi-sub-3" class="kpi-subtitle">N/A percentile</div>
+            </div>
+            <div id="kpi-card-4" class="kpi-card glass-panel">
+              <div id="kpi-title-4" class="kpi-title">Sub-State Investment<div class="glass-tooltip-container info-icon">i<div class="glass-tooltip">Investment value outside state level</div></div></div>
+              <div id="kpi-val-4" class="kpi-value">$0.00</div>
+              <div id="kpi-sub-4" class="kpi-subtitle">N/A percentile</div>
+            </div>
+            <div id="kpi-card-5" class="kpi-card glass-panel">
+              <div id="kpi-title-5" class="kpi-title">District Taxpayer Savings<div class="glass-tooltip-container info-icon">i<div class="glass-tooltip">Estimated savings for taxpayers</div></div></div>
+              <div id="kpi-val-5" class="kpi-value">$0.00</div>
+              <div id="kpi-sub-5" class="kpi-subtitle">N/A percentile</div>
+            </div>
+            <div id="kpi-card-6" class="kpi-card glass-panel">
+              <div id="kpi-title-6" class="kpi-title">Small Borrowers Percent (%)<div class="glass-tooltip-container info-icon">i<div class="glass-tooltip">Percentage of borrowers classified as small</div></div></div>
+              <div id="kpi-val-6" class="kpi-value">0%</div>
+              <div id="kpi-sub-6" class="kpi-subtitle">N/A percentile</div>
+            </div>
+          </div>
+          
+          <!-- BONDS DEEP DIVE -->
+          <div id="charts-deep-dive-bonds" class="radar-charts-container" style="display: none; flex: 0 0 auto !important; height: auto !important; flex-shrink: 0;">
+            <!-- Radar and Sankey will go here via charts.js -->
+          </div>
+          
+          <div id="treemap-section" style="margin-top: 30px; width: 100%; flex-shrink: 0; margin-bottom: 30px;">
+            <h3 id="treemap-title" style="font-size: 20px; margin-bottom: 15px; color: var(--text-primary);">Statewide Use of Proceeds Treemap</h3>
+            <div id="treemap-container" style="width: 100%; min-height: 500px; height: auto; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border);"></div>
+          </div>
+
+          <!-- DEVIATION CHARTS SECTION (AFTER TREEMAP) -->
+          <div id="deviation-charts-section" class="radar-charts-container" style="display: none; flex: 0 0 auto !important; height: auto !important; flex-shrink: 0; margin-bottom: 30px;">
+            <div class="radar-section" style="flex: 1;">
+              <h3 style="font-size: 14px;">BOND METRICS DEVIATION</h3>
+              <div id="deviation-bond-combined-chart" class="radar-container glass-panel" style="display: block; position: relative; height: 400px;"></div>
+            </div>
+            <div class="radar-section" style="flex: 1;">
+              <h3 style="font-size: 14px;">USE OF PROCEEDS DEVIATION</h3>
+              <div id="deviation-proceeds-chart" class="radar-container glass-panel" style="display: block; position: relative; height: 400px;"></div>
+            </div>
+          </div>
+
+          <!-- BONDS FOOTER -->
+          <div id="charts-bonds-footer" class="insights-source" style="display: none; flex: 0 0 auto !important; margin-top: auto; padding: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.4; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
+              <div style="margin-bottom: 8px;">
+                  <a id="charts-factsheet-link" href="#" target="_blank" style="color: var(--accent-cyan); text-decoration: underline; font-weight: 600;">Download District Bonds Factsheet</a>
+              </div>
+              <strong>Municipal Bond Data From:</strong> <a href="https://munifinance.uchicago.edu/congressional/" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">Center for Municipal Finance</a> at the UChicago, provided by <a href="https://www.ice.com/fixed-income-data-services/ice-climate-analytics-for-municipal-debt" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">Intercontinental Exchange, Inc. (ICE)</a>. Data current as of <strong style="color: var(--accent-cyan);">January 23, 2025</strong>.
+          </div>
+
+          <!-- HEALTH/ESG DEEP DIVE -->
+          <div id="charts-deep-dive-health" style="display: none; flex-direction: column; width: 100%; gap: 20px;">
+            <div style="display: flex; flex-direction: row; gap: 20px; width: 100%;">
+              <div class="radar-section" style="flex: 1;">
+                <h3>ENVIRONMENTAL & HEALTH</h3>
+                <div id="radar-health" class="radar-container glass-panel" style="flex-direction: column; align-items: center; justify-content: center; position: relative; height: 400px; padding-top: 20px;"></div>
+              </div>
+              <div class="radar-section" style="flex: 1;">
+                <h3>ECONOMIC & SOCIAL</h3>
+                <div id="radar-economic" class="radar-container glass-panel" style="flex-direction: column; align-items: center; justify-content: center; position: relative; height: 400px; padding-top: 20px;"></div>
+              </div>
+            </div>
+            
+            <!-- Static Lollipops Section -->
+            <div id="health-static-cards-section" style="width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 20px;">
+              <!-- Cards will be injected here by lollipop_static.js -->
+          </div>
+        </div>
+      </div>
+      </div>
+
+
+      <!-- View: INSIGHTS -->
+      <div id="view-insights" class="view-container" style="display: flex; flex-direction: column; height: 100%;">
+        <div class="insights-header" style="flex-shrink: 0; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 36px; padding-bottom: 12px;">
+          <div>
+            <h2>District Insights Snapshot</h2>
+            <p>Detailed performance profile for the selected congressional district.</p>
+          </div>
+          <div style="display: flex; gap: 12px; margin-top: 4px;">
+            <button id="btn-national-view" class="insights-top-btn" style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-secondary)'">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              National View
+            </button>
+            <button id="btn-go-district" class="insights-top-btn" style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 500;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-secondary)'">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+              Go to District
+            </button>
+          </div>
+        </div>
+        <div class="insights-body" style="flex: 1; min-height: 0;">
+          <div class="insights-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
+            <h2>Insights Snapshot</h2>
+            <p>Select a congressional district from the map or search bar to view its detailed insights snapshot.</p>
+          </div>
+        </div>
+      </div>
+      
+    </main>
+
+    <!-- Right Details Sidebar (Collapsible) -->
+    <aside class="sidebar-right hidden glass-panel" id="details-sidebar">
+      <button id="close-details-btn" class="close-btn">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="details-content">
+        <div id="details-header-controls" class="hidden" style="margin-top: -16px; margin-bottom: 16px;">
+          <button id="back-to-overview-btn" class="glass-panel" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--text-main); cursor: pointer; padding: 6px 12px; border-radius: 4px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Return to National View
+          </button>
+        </div>
+        <p class="details-category">METRIC DETAILS</p>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+          <h2 id="details-title" style="margin-bottom: 0;">Total Inv Value</h2>
+          <a href="#" id="details-download-factsheet" class="btn-glow" target="_blank" style="display: none; padding: 4px 8px; font-size: 11px; text-decoration: none; border-radius: 4px; align-items: center; gap: 4px; white-space: nowrap; margin-top: 2px; border: 1px solid rgba(100, 255, 218, 0.4); color: var(--accent-cyan); background: rgba(100, 255, 218, 0.1);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Factsheet
+          </a>
+        </div>
+
+        
+        <div class="filter-group" id="scale-bar-control-group" style="margin-top: 24px; margin-bottom: 12px; display: none;">
+          <div class="glass-panel" style="display: flex; padding: 2px; border-radius: 6px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);">
+            <button id="scale-comparison-us-btn" class="toggle-btn active" style="flex: 1; border: none; background: rgba(255, 255, 255, 0.1); border-radius: 4px; padding: 6px 0; color: #fff; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;">District Average</button>
+            <button id="scale-comparison-state-btn" class="toggle-btn" style="flex: 1; border: none; background: transparent; border-radius: 4px; padding: 6px 0; color: rgba(255, 255, 255, 0.5); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;">State Average</button>
+            <input type="hidden" id="scale-comparison-select" value="us">
+          </div>
+        </div>
+
+        <div class="legend-container">
+          <div class="legend-scale-wrapper">
+            <div class="legend-left-panel">
+              <div id="legend-min" class="legend-value">0</div>
+              <div id="legend-min-desc" class="legend-desc"></div>
+            </div>
+            
+            <div class="legend-center-panel">
+              <div class="legend-bar-wrapper">
+                <div class="legend-bar" id="legend-gradient"></div>
+                
+                <div class="legend-pointer-container top-pointer" id="legend-top-pointer-container" style="display: none;">
+                  <div class="legend-pointer-triangle"></div>
+                  <div class="legend-pointer-value" id="legend-top-pointer-value" style="white-space: nowrap;">--</div>
+                  <div class="legend-pointer-label" id="legend-top-pointer-label">District Average</div>
+                </div>
+
+                <div class="legend-pointer-container" id="legend-pointer-container">
+                  <div class="legend-pointer-triangle"></div>
+                  <div class="legend-pointer-value" id="legend-pointer-value" style="white-space: nowrap;">--</div>
+                  <div class="legend-pointer-label" id="legend-pointer-label">United States Average</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="legend-right-panel">
+              <div id="legend-max" class="legend-value">100</div>
+              <div id="legend-max-desc" class="legend-desc" style="display: none;"></div>
+            </div>
+          </div>
+          
+          <div class="legend-summary-text" id="legend-summary-text">
+            <!-- Dynamic summary text goes here -->
+          </div>
+        </div>
+        
+        <div id="overview-view">
+          <div class="ranked-list">
+            <p class="list-title right-aligned-tooltip-wrapper" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; position: relative;">
+              ALL DISTRICTS
+              <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="custom-tooltip glass-panel">Click on any State below to expand Congressional Districts. Click any District to Zoom on Map.</span>
+              </span>
+            </p>
+            <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 12px 0;">Select Congressional District Below:</p>
+            <div class="ranked-item national-average">
+              <div class="rank-badge">AVG</div>
+              <div class="rank-color-dot" style="background-color: #8892b0;"></div>
+              <div class="rank-name">National Average</div>
+              <div class="rank-val" id="nat-avg-val">--</div>
+            </div>
+
+            <div class="list-sort-controls right-aligned-tooltip-wrapper" style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #8892b0; margin-bottom: 8px; padding: 0 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+              <div>
+                Sort by: 
+                <span id="sort-district-btn" style="cursor: pointer; color: var(--accent-cyan); font-weight: 600; transition: color 0.2s;">Highest District</span> <span style="opacity: 0.5; margin: 0 4px;">|</span> 
+                <span id="sort-state-btn" style="cursor: pointer; transition: color 0.2s;">State Average</span>
+              </div>
+              <div class="info-icon" style="cursor: help;">
+                <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  <span class="custom-tooltip glass-panel" style="width: 260px; white-space: normal; line-height: 1.4; padding: 12px; font-size: 14px; letter-spacing: 0.5px;">
+                    Sort the list by the state's highest congressional district value or the state's overall average.
+                  </span>
+                </span>
+              </div>
+            </div>
+            
+            <div class="list-scroll-area" id="ranked-list-container">
+              <!-- Dynamic items populated by JS -->
+            </div>
+          </div>
+        </div>
+        
+        <div id="district-view" class="hidden">
+          <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);">
+             <h3 id="district-metric-value" style="font-size: 28px; color: var(--accent-main); margin-bottom: 4px; font-family: 'IBM Plex Mono', monospace;">--</h3>
+             <p id="district-metric-label" style="font-size: 11px; color: #8892b0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Metric</p>
+          </div>
+          <div id="muni-inspector" class="muni-inspector" style="margin-top: 0; padding-top: 0; border-top: none;">
+              
+              <div class="right-aligned-tooltip-wrapper" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; margin-top: 10px; position: relative;">
+                <p class="list-title" style="margin: 0;">MUNICIPAL BONDS</p>
+                <span class="custom-tooltip-container" style="cursor: help; position: relative; display: inline-flex;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255, 255, 255, 0.7)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <span class="custom-tooltip glass-panel">Click below to explore municipal bonds per district</span>
+                </span>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 12px 0;">Select From Options Below:</p>
+  
+              <div id="inspector-buttons" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button id="btn-issuers" onclick="window.toggleInspectorSection('issuers')" class="glass-panel" style="flex: 1; padding: 12px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; background: rgba(255,255,255,0.05); color: var(--text-main); font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s, color 0.2s;">Top Issuers</button>
+                <button id="btn-proceeds" onclick="window.toggleInspectorSection('proceeds')" class="glass-panel" style="flex: 1; padding: 12px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; background: rgba(255,255,255,0.05); color: var(--text-main); font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s, color 0.2s;">Use of Proceeds</button>
+              </div>
+  
+              <div id="inspector-content-issuers" class="hidden" style="position: relative; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <p id="title-issuers" class="list-title" style="margin: 0; font-size: 10px;">TOP ISSUERS</p>
+                  <button onclick="window.toggleInspectorSection(null)" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <div id="issuer-chart" class="mini-chart-container"></div>
+              </div>
+  
+              <div id="inspector-content-proceeds" class="hidden" style="position: relative; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <p id="title-proceeds" class="list-title" style="margin: 0; font-size: 10px;">USE OF PROCEEDS</p>
+                  <button onclick="window.toggleInspectorSection(null)" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <div id="proceeds-chart" class="mini-chart-container"></div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script type="module" src="./js/app.js?v=19"></script>
+</body>
+</html>

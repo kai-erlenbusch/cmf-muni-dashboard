@@ -1,0 +1,443 @@
+Page,District_Name,Total_Issuers,Small_Borrowers,Sub_State_Inv_Value,Sub_State_Inv_Unit,Total_Inv_Value,Sub_State_Sav_Value,Small_Borrowers_Pct
+1,Alaska 0th,17,6,2.31,billion,6.28,48.51,35.3
+5,Alabama 1st,93,64,17.62,billion,20.91,370.06,68.8
+10,Alabama 2nd,103,65,20.11,billion,23.5,422.28,63.1
+16,Alabama 3rd,88,56,11.97,billion,15.52,251.28,63.6
+21,Alabama 4th,90,62,3.6,billion,7.16,75.66,68.9
+26,Alabama 5th,53,23,5.2,billion,8.66,109.24,43.4
+30,Alabama 6th,76,35,12.41,billion,15.93,260.69,46.1
+35,Alabama 7th,93,59,19.88,billion,23.4,417.55,63.4
+40,Arkansas 1st,169,147,3.1,billion,3.67,65,87
+47,Arkansas 2nd,105,80,4.48,billion,5.07,94.12,76.2
+53,Arkansas 3rd,80,60,3.69,billion,4.28,77.39,75
+58,Arkansas 4th,170,153,3.18,billion,3.77,66.83,90
+65,Arizona 1st,54,14,21.2,billion,22.81,445.29,25.9
+69,Arizona 2nd,85,52,13.88,billion,15.39,291.51,61.2
+74,Arizona 3rd,63,15,22.75,billion,24.32,477.82,23.8
+79,Arizona 4th,62,18,22.42,billion,23.98,470.73,29
+84,Arizona 5th,62,20,18.91,billion,20.4,397.13,32.3
+89,Arizona 6th,59,31,7.4,billion,8.99,155.38,52.5
+94,Arizona 7th,94,50,11.08,billion,12.56,232.65,53.2
+99,Arizona 8th,63,17,21.24,billion,22.82,446.01,27
+104,Arizona 9th,85,35,8.26,billion,9.89,173.37,41.2
+109,California 1st,97,77,12.28,billion,96.79,257.95,79.4
+115,California 2nd,149,104,28,billion,112.1,587.94,69.8
+122,California 3rd,137,81,17.31,billion,101.63,363.54,59.1
+129,California 4th,121,75,47.77,billion,131.69,"1,003.10",62
+136,California 5th,95,62,19.78,billion,104.62,415.47,65.3
+142,California 6th,57,18,18.51,billion,102.59,388.78,31.6
+147,California 7th,60,18,28.76,billion,112.37,604.05,30
+152,California 8th,65,26,38.17,billion,122.53,801.56,40
+157,California 9th,81,44,15.18,billion,99.97,318.72,54.3
+163,California 10th,71,30,30.84,billion,114.63,647.72,42.3
+168,California 11th,44,7,56.51,billion,139.79,"1,186.65",15.9
+173,California 12th,68,26,51.2,billion,136.09,"1,075.26",38.2
+178,California 13th,126,77,23.76,billion,109.42,498.96,61.1
+186,California 14th,53,12,40.15,billion,125.19,843.16,22.6
+191,California 15th,79,31,34.08,billion,118.34,715.68,39.2
+197,California 16th,96,32,37.28,billion,123.5,782.89,33.3
+203,California 17th,90,26,44.08,billion,129.97,925.77,28.9
+209,California 18th,101,45,35.56,billion,120.91,746.71,44.6
+216,California 19th,112,51,58.54,billion,143.77,"1,229.36",45.5
+222,California 20th,92,56,14.14,billion,99,296.95,60.9
+228,California 21st,69,43,8.37,billion,92.76,175.83,62.3
+233,California 22nd,100,76,7.09,billion,91.64,148.92,76
+240,California 23rd,88,60,6.07,billion,91.63,127.49,68.2
+246,California 24th,75,45,30.42,billion,114.86,638.78,60
+252,California 25th,139,85,9.69,billion,94.56,203.48,61.2
+260,California 26th,78,43,25.29,billion,109.86,531.07,55.1
+266,California 27th,78,32,20.26,billion,105.37,425.39,41
+272,California 28th,103,41,35.74,billion,123.68,750.57,39.8
+279,California 29th,69,15,76.96,billion,159.98,"1,616.07",21.7
+284,California 30th,75,16,80.54,billion,164.6,"1,691.33",21.3
+289,California 31st,74,25,35.01,billion,121.31,735.25,33.8
+295,California 32nd,67,17,75.69,billion,158.71,"1,589.40",25.4
+300,California 33rd,73,31,20.25,billion,105.82,425.26,42.5
+305,California 34th,63,12,77.43,billion,161.11,"1,625.99",19
+310,California 35th,119,44,34.05,billion,120.08,715.09,37
+317,California 36th,82,20,88.11,billion,172.38,"1,850.26",24.4
+323,California 37th,66,13,74.21,billion,158.14,"1,558.37",19.7
+328,California 38th,82,30,32.82,billion,119.2,689.32,36.6
+334,California 39th,81,25,37.54,billion,121.7,788.41,30.9
+340,California 40th,89,36,24.7,billion,109.4,518.65,40.4
+346,California 41st,121,54,16.22,billion,101.22,340.67,44.6
+353,California 42nd,74,31,54.02,billion,138.39,"1,134.46",41.9
+358,California 43rd,90,29,69.56,billion,153.5,"1,460.85",32.2
+364,California 44th,88,23,84.36,billion,167.75,"1,771.58",26.1
+370,California 45th,98,39,32.33,billion,119.2,679.01,39.8
+376,California 46th,69,23,28.02,billion,113.39,588.46,33.3
+381,California 47th,64,21,37.48,billion,121.87,787.14,32.8
+386,California 48th,122,47,24.62,billion,112.21,517.09,38.5
+394,California 49th,87,36,19.01,billion,104.32,399.22,41.4
+400,California 50th,94,31,51,billion,139.45,"1,070.92",33
+406,California 51st,56,18,31.75,billion,119.1,666.82,32.1
+411,California 52nd,61,22,23.74,billion,110.17,498.53,36.1
+416,Colorado 1st,48,15,19.5,billion,26.31,409.4,31.2
+420,Colorado 2nd,118,79,17.44,billion,23.27,366.17,66.9
+426,Colorado 3rd,120,87,11.04,billion,16.98,231.88,72.5
+432,Colorado 4th,157,111,10.3,billion,16.15,216.22,70.7
+439,Colorado 5th,68,45,11.72,billion,17.44,246.19,66.2
+444,Colorado 6th,108,53,14.03,billion,20.87,294.54,49.1
+450,Colorado 7th,95,62,12.43,billion,19.44,261.13,65.3
+456,Colorado 8th,143,85,10.3,billion,17.18,216.33,59.4
+463,Connecticut 1st,32,13,4.05,billion,28.26,85.08,40.6
+467,Connecticut 2nd,56,36,4.94,billion,29.08,103.74,64.3
+473,Connecticut 3rd,33,16,7.45,billion,31.59,156.53,48.5
+477,Connecticut 4th,28,11,5.69,billion,29.79,119.59,39.3
+481,Connecticut 5th,32,16,3.25,billion,27.46,68.22,50
+485,Delaware 0th,30,14,2.92,billion,6.79,61.28,46.7
+489,Florida 1st,35,16,2.67,billion,13.22,56.02,45.7
+493,Florida 2nd,50,30,3.07,billion,13.57,64.45,60
+498,Florida 3rd,40,18,4.64,billion,14.97,97.46,45
+502,Florida 4th,67,39,12.77,billion,22.5,268.13,58.2
+507,Florida 5th,92,41,12.92,billion,23.34,271.32,44.6
+513,Florida 6th,49,26,7.15,billion,17.73,150.14,53.1
+518,Florida 7th,36,20,11.42,billion,21.69,239.78,55.6
+522,Florida 8th,52,23,11,billion,21.36,230.96,44.2
+527,Florida 9th,87,48,15.61,billion,25.78,327.72,55.2
+533,Florida 10th,44,14,16.08,billion,26.9,337.61,31.8
+538,Florida 11th,63,26,14.26,billion,24.34,299.47,41.3
+543,Florida 12th,60,35,9.04,billion,19.25,189.8,58.3
+548,Florida 13th,27,12,8.3,billion,18.53,174.27,44.4
+552,Florida 14th,53,17,14.09,billion,25.06,295.88,32.1
+557,Florida 15th,111,59,16.18,billion,26.44,339.74,53.2
+563,Florida 16th,136,98,9.5,billion,20.45,199.46,72.1
+570,Florida 17th,90,48,5.84,billion,16.4,122.59,53.3
+576,Florida 18th,82,50,8.22,billion,18.43,172.52,61
+581,Florida 19th,74,37,5.29,billion,15.71,111.04,50
+586,Florida 20th,59,17,15.56,billion,25.91,326.68,28.8
+591,Florida 21st,83,36,10.45,billion,20.62,219.51,43.4
+596,Florida 22nd,40,9,8.91,billion,19.29,187.11,22.5
+600,Florida 23rd,74,25,15.47,billion,25.79,324.87,33.8
+605,Florida 24th,63,20,25.57,billion,38.01,537.01,31.7
+610,Florida 25th,53,16,13.08,billion,23.88,274.72,30.2
+615,Florida 26th,77,41,19,billion,31.42,398.94,53.2
+620,Florida 27th,48,15,23.79,billion,36.22,499.64,31.2
+625,Florida 28th,91,58,21.1,billion,34.32,443.12,63.7
+631,Georgia 1st,23,15,2.19,billion,26.39,45.98,65.2
+635,Georgia 2nd,48,29,3.51,billion,27.7,73.8,60.4
+640,Georgia 3rd,50,29,3.52,billion,27.7,73.93,58
+645,Georgia 4th,8,0,4.92,billion,28.86,103.32,0
+649,Georgia 5th,63,15,23.02,billion,46.57,483.4,23.8
+654,Georgia 6th,47,12,17.85,billion,41.43,374.76,25.5
+658,Georgia 7th,33,6,7.97,billion,31.86,167.38,18.2
+662,Georgia 8th,50,31,6.88,billion,31.06,144.45,62
+667,Georgia 9th,35,18,3.87,billion,27.96,81.3,51.4
+671,Georgia 10th,60,30,5.73,billion,29.92,120.31,50
+676,Georgia 11th,42,13,3.98,billion,28.13,83.55,31
+680,Georgia 12th,32,22,1.94,billion,26.14,40.75,68.8
+684,Georgia 13th,27,11,7.14,billion,30.8,150.03,40.7
+688,Georgia 14th,33,13,3.77,billion,27.95,79.25,39.4
+692,Hawaii 1st,8,2,7.49,billion,11.74,157.35,25
+695,Hawaii 2nd,11,3,8.11,billion,12.37,170.34,27.3
+698,Iowa 1st,178,150,5.96,billion,12.39,125.16,84.3
+706,Iowa 2nd,223,201,3.56,billion,10.03,74.69,90.1
+715,Iowa 3rd,154,121,4.77,billion,11.3,100.25,78.6
+722,Iowa 4th,264,242,3.33,billion,9.78,69.85,91.7
+733,Idaho 1st,41,29,1.96,billion,5.12,41.25,70.7
+737,Idaho 2nd,48,33,2.18,billion,5.32,45.84,68.8
+741,Illinois 1st,147,100,44.24,billion,75.87,929.01,68
+749,Illinois 2nd,103,88,10.79,billion,35.77,226.63,85.4
+755,Illinois 3rd,125,80,41.57,billion,73.17,872.98,64
+761,Illinois 4th,142,97,41.62,billion,73.25,874.07,68.3
+768,Illinois 5th,135,84,48.54,billion,80,"1,019.27",62.2
+774,Illinois 6th,151,117,17.28,billion,42.21,362.92,77.5
+781,Illinois 7th,102,57,43.53,billion,75.08,914.2,55.9
+787,Illinois 8th,123,94,14.58,billion,39.5,306.16,76.4
+793,Illinois 9th,156,107,42.55,billion,74.14,893.5,68.6
+800,Illinois 10th,152,115,15.12,billion,40.08,317.58,75.7
+807,Illinois 11th,115,85,12.71,billion,37.82,266.87,73.9
+813,Illinois 12th,132,125,2.47,billion,27.62,51.84,94.7
+819,Illinois 13th,87,63,5.73,billion,30.84,120.33,72.4
+824,Illinois 14th,109,76,13.8,billion,38.86,289.75,69.7
+830,Illinois 15th,133,117,3.58,billion,28.71,75.24,88
+836,Illinois 16th,157,138,10.75,billion,35.89,225.82,87.9
+843,Illinois 17th,90,71,10.53,billion,35.68,221.1,78.9
+848,Indiana 1st,115,94,4.27,billion,10.88,89.62,81.7
+854,Indiana 2nd,146,115,4.1,billion,10.59,86.07,78.8
+861,Indiana 3rd,110,86,5.78,billion,12.36,121.39,78.2
+867,Indiana 4th,147,108,7.65,billion,14.18,160.75,73.5
+874,Indiana 5th,106,70,7.53,billion,14.06,158.17,66
+880,Indiana 6th,119,88,9.17,billion,15.79,192.5,73.9
+886,Indiana 7th,42,17,11.12,billion,17.66,233.52,40.5
+890,Indiana 8th,103,82,5.65,billion,12.16,118.66,79.6
+896,Indiana 9th,104,81,4.9,billion,11.47,102.8,77.9
+902,Kansas 1st,217,195,4.43,billion,6.39,93.03,89.9
+910,Kansas 2nd,183,154,4.58,billion,6.7,96.23,84.2
+917,Kansas 3rd,80,46,6.63,billion,8.68,139.31,57.5
+922,Kansas 4th,133,105,3.38,billion,5.37,71.01,78.9
+928,Kentucky 1st,124,94,2.95,billion,15.72,61.86,75.8
+934,Kentucky 2nd,79,46,4.22,billion,17.01,88.54,58.2
+939,Kentucky 3rd,26,4,6.51,billion,19.42,136.81,15.4
+943,Kentucky 4th,92,60,3.59,billion,16.34,75.33,65.2
+949,Kentucky 5th,103,84,2.32,billion,15.09,48.81,81.6
+955,Kentucky 6th,63,40,3.85,billion,16.68,80.84,63.5
+960,Louisiana 1st,49,25,6.82,billion,15.09,143.15,51
+964,Louisiana 2nd,32,17,4.6,billion,12.88,96.66,53.1
+968,Louisiana 3rd,43,30,2.85,billion,11.15,59.75,69.8
+972,Louisiana 4th,74,59,2.61,billion,10.9,54.82,79.7
+977,Louisiana 5th,50,32,4.71,billion,12.95,98.91,64
+981,Louisiana 6th,45,30,4.5,billion,12.76,94.48,66.7
+985,Massachusetts 1st,59,37,3.26,billion,49.49,68.52,62.7
+991,Massachusetts 2nd,72,49,12.25,billion,57.65,257.17,68.1
+997,Massachusetts 3rd,61,34,8.6,billion,54.24,180.59,55.7
+1002,Massachusetts 4th,49,25,11.64,billion,57.04,244.49,51
+1007,Massachusetts 5th,33,4,16.42,billion,61.5,344.81,12.1
+1011,Massachusetts 6th,60,26,11.54,billion,57.08,242.43,43.3
+1016,Massachusetts 7th,19,5,17.81,billion,63.18,374.05,26.3
+1020,Massachusetts 8th,37,11,15.46,billion,60.89,324.71,29.7
+1024,Massachusetts 9th,79,43,9.7,billion,55.8,203.68,54.4
+1029,Maryland 1st,17,8,2.19,billion,20.87,45.96,47.1
+1033,Maryland 2nd,13,3,7.31,billion,25.88,153.44,23.1
+1037,Maryland 3rd,18,7,6.18,billion,24.81,129.77,38.9
+1041,Maryland 4th,34,14,12.09,billion,30.63,253.79,41.2
+1045,Maryland 5th,21,6,11.42,billion,30.01,239.88,28.6
+1049,Maryland 6th,38,17,9.53,billion,28.09,200.13,44.7
+1053,Maryland 7th,18,5,10.07,billion,28.6,211.52,27.8
+1057,Maryland 8th,25,7,10.72,billion,29.22,225.07,28
+1061,Maine 1st,57,42,2.57,billion,7.3,53.88,73.7
+1066,Maine 2nd,23,16,1.86,billion,6.59,39.06,69.6
+1070,Michigan 1st,137,122,3.24,billion,22.23,68.03,89.1
+1077,Michigan 2nd,114,88,6.22,billion,25.24,130.7,77.2
+1083,Michigan 3rd,65,31,6.06,billion,25.07,127.3,47.7
+1088,Michigan 4th,79,42,4.59,billion,23.54,96.4,53.2
+1093,Michigan 5th,116,93,3.65,billion,22.65,76.64,80.2
+1099,Michigan 6th,68,37,10.72,billion,29.47,225.09,54.4
+1104,Michigan 7th,86,57,8.34,billion,27.28,175.23,66.3
+1109,Michigan 8th,84,59,5.15,billion,23.95,108.19,70.2
+1114,Michigan 9th,92,65,4.44,billion,23.36,93.18,70.7
+1119,Michigan 10th,37,12,8.26,billion,27.26,173.37,32.4
+1123,Michigan 11th,57,30,11.91,billion,30.81,250.16,52.6
+1128,Michigan 12th,44,21,13.26,billion,31.75,278.55,47.7
+1132,Michigan 13th,52,32,12.36,billion,31.04,259.54,61.5
+1136,Minnesota 1st,232,191,7.35,billion,18.54,154.35,82.3
+1145,Minnesota 2nd,124,72,8.28,billion,19.38,173.9,58.1
+1151,Minnesota 3rd,103,54,9.68,billion,20.69,203.33,52.4
+1157,Minnesota 4th,113,65,10.7,billion,21.62,224.68,57.5
+1163,Minnesota 5th,87,40,11.23,billion,22.12,235.77,46
+1168,Minnesota 6th,144,90,9.19,billion,20.36,193.03,62.5
+1175,Minnesota 7th,363,309,8.91,billion,20.13,187.09,85.1
+1188,Minnesota 8th,236,184,7.22,billion,18.43,151.63,78
+1197,Missouri 1st,105,67,10.42,billion,14.03,218.81,63.8
+1203,Missouri 2nd,100,63,8.07,billion,11.71,169.55,63
+1209,Missouri 3rd,133,95,6.83,billion,10.48,143.43,71.4
+1215,Missouri 4th,203,179,2.98,billion,6.71,62.55,88.2
+1223,Missouri 5th,45,13,6.98,billion,10.75,146.61,28.9
+1227,Missouri 6th,219,190,7.49,billion,11.32,157.39,86.8
+1235,Missouri 7th,110,92,3.17,billion,6.91,66.59,83.6
+1241,Missouri 8th,165,145,4.54,billion,8.18,95.29,87.9
+1248,Mississippi 1st,60,53,1.19,billion,6.49,25.09,88.3
+1253,Mississippi 2nd,61,52,1.01,billion,6.31,21.25,85.2
+1258,Mississippi 3rd,62,56,1.14,billion,6.43,24.01,90.3
+1263,Mississippi 4th,44,35,0.82,billion,6.11,17.17,79.5
+1267,Montana 1st,67,52,1.56,billion,2.27,32.84,77.6
+1272,Montana 2nd,65,54,1.29,billion,2,27.16,83.1
+1277,North Carolina 1st,24,14,1.8,billion,8.9,37.75,58.3
+1282,North Carolina 2nd,36,8,8.74,billion,16.06,183.64,22.2
+1286,North Carolina 3rd,31,11,2.78,billion,9.88,58.38,35.5
+1291,North Carolina 4th,46,9,9.51,billion,16.87,199.7,19.6
+1295,North Carolina 5th,27,7,3.6,billion,10.69,75.62,25.9
+1299,North Carolina 6th,22,7,5.47,billion,12.48,114.77,31.8
+1303,North Carolina 7th,33,14,4.31,billion,11.31,90.59,42.4
+1308,North Carolina 8th,18,8,4.95,billion,11.98,104,44.4
+1312,North Carolina 9th,15,4,2.04,billion,9.24,42.84,26.7
+1315,North Carolina 10th,35,15,5.9,billion,12.89,123.88,42.9
+1320,North Carolina 11th,24,7,2.44,billion,9.5,51.28,29.2
+1324,North Carolina 12th,17,4,10.47,billion,17.35,219.85,23.5
+1328,North Carolina 13th,28,12,3.79,billion,10.99,79.56,42.9
+1333,North Carolina 14th,24,12,6.25,billion,13.09,131.2,50
+1338,North Dakota 0th,250,223,4.77,billion,7.01,100.18,89.2
+1348,Nebraska 1st,158,130,8.5,billion,10.11,178.44,82.3
+1355,Nebraska 2nd,120,90,12,billion,13.65,252.1,75
+1361,Nebraska 3rd,429,414,7.65,billion,9.25,160.61,96.5
+1374,New Hampshire 1st,19,10,1.31,billion,4.03,27.48,52.6
+1379,New Hampshire 2nd,16,8,1.97,billion,4.7,41.41,50
+1383,New Jersey 1st,103,73,13.69,billion,55.14,287.51,70.9
+1389,New Jersey 2nd,129,89,14.84,billion,56.35,311.65,69
+1396,New Jersey 3rd,91,60,14.47,billion,55.96,303.82,65.9
+1401,New Jersey 4th,62,44,13.02,billion,54.54,273.43,71
+1406,New Jersey 5th,117,85,12.76,billion,54.29,267.98,72.6
+1413,New Jersey 6th,66,38,15.04,billion,56.56,315.86,57.6
+1418,New Jersey 7th,138,106,13.59,billion,55.2,285.31,76.8
+1426,New Jersey 8th,55,18,16.42,billion,57.93,344.72,32.7
+1431,New Jersey 9th,82,54,12.38,billion,53.93,260.05,65.9
+1436,New Jersey 10th,69,23,17.36,billion,58.93,364.55,33.3
+1442,New Jersey 11th,93,58,16.61,billion,58.06,348.77,62.4
+1449,New Jersey 12th,69,37,15.1,billion,56.61,317,53.6
+1455,New Mexico 1st,43,24,4.06,billion,8.9,85.22,55.8
+1459,New Mexico 2nd,62,40,4.49,billion,9.42,94.3,64.5
+1465,New Mexico 3rd,58,43,3.03,billion,7.9,63.65,74.1
+1470,Nevada 1st,21,2,14.78,billion,17.95,310.42,9.5
+1474,Nevada 2nd,31,14,3.51,billion,7.23,73.62,45.2
+1478,Nevada 3rd,27,12,12.47,billion,15.28,261.84,44.4
+1482,Nevada 4th,30,9,14.88,billion,17.69,312.57,30
+1486,New York 1st,86,42,35.87,billion,108.36,753.24,48.8
+1491,New York 2nd,65,20,41.71,billion,114.28,875.85,30.8
+1496,New York 3rd,104,40,194.58,billion,265.81,"4,086.15",38.5
+1502,New York 4th,75,34,62.62,billion,133.73,"1,315.06",45.3
+1507,New York 5th,40,6,184.46,billion,254.01,"3,873.64",15
+1511,New York 6th,42,8,189.69,billion,259.12,"3,983.49",19
+1515,New York 7th,43,8,187.23,billion,256.9,"3,931.83",18.6
+1519,New York 8th,45,9,187.4,billion,256.65,"3,935.48",20
+1523,New York 9th,39,7,176.31,billion,245.86,"3,702.47",17.9
+1527,New York 10th,46,8,190.31,billion,263.12,"3,996.44",17.4
+1531,New York 11th,41,8,178.34,billion,248.04,"3,745.08",19.5
+1535,New York 12th,48,9,194.95,billion,267.28,"4,094.05",18.8
+1539,New York 13th,48,8,191.07,billion,263.58,"4,012.45",16.7
+1543,New York 14th,43,9,188.03,billion,257.35,"3,948.72",20.9
+1547,New York 15th,44,9,187.63,billion,257.04,"3,940.32",20.5
+1551,New York 16th,80,35,69.98,billion,140.97,"1,469.59",43.8
+1556,New York 17th,115,73,61.43,billion,132.39,"1,290.13",63.5
+1562,New York 18th,116,82,46.9,billion,118.16,984.91,70.7
+1568,New York 19th,165,136,45.21,billion,116.19,949.46,82.4
+1576,New York 20th,94,54,18.35,billion,89.38,385.32,57.4
+1582,New York 21st,186,156,17.71,billion,88.77,371.97,83.9
+1590,New York 22nd,116,89,18.82,billion,89.87,395.24,76.7
+1597,New York 23rd,168,128,18.76,billion,89.78,393.89,76.2
+1605,New York 24th,226,199,18.18,billion,89.23,381.74,88.1
+1615,New York 25th,70,45,19.5,billion,90.52,409.56,64.3
+1620,New York 26th,61,24,16.05,billion,87.05,336.95,39.3
+1625,Ohio 1st,84,51,8.1,billion,34.35,170.2,60.7
+1631,Ohio 2nd,69,54,4.49,billion,30.64,94.38,78.3
+1636,Ohio 3rd,63,20,12.45,billion,38.1,261.45,31.7
+1641,Ohio 4th,83,60,6.47,billion,32.62,135.95,72.3
+1647,Ohio 5th,96,75,8.37,billion,34.52,175.74,78.1
+1653,Ohio 6th,72,59,3.22,billion,29.44,67.6,81.9
+1658,Ohio 7th,91,56,9.65,billion,35.87,202.71,61.5
+1664,Ohio 8th,94,70,5.98,billion,32.27,125.57,74.5
+1670,Ohio 9th,77,62,3.61,billion,29.8,75.8,80.5
+1675,Ohio 10th,84,59,4.84,billion,31.02,101.56,70.2
+1681,Ohio 11th,75,35,12.17,billion,38.44,255.65,46.7
+1686,Ohio 12th,87,62,5.59,billion,31.82,117.33,71.3
+1692,Ohio 13th,60,33,5.1,billion,31.37,107.19,55
+1697,Ohio 14th,67,51,4.88,billion,31.06,102.52,76.1
+1702,Ohio 15th,81,47,9.97,billion,35.69,209.35,58
+1707,Oklahoma 1st,46,27,5.73,billion,9.97,120.31,58.7
+1711,Oklahoma 2nd,151,144,3.53,billion,7.77,74.19,95.4
+1719,Oklahoma 3rd,125,108,4.9,billion,9.1,102.84,86.4
+1725,Oklahoma 4th,68,53,8.94,billion,13.17,187.83,77.9
+1730,Oklahoma 5th,64,44,8.36,billion,12.54,175.66,68.8
+1735,Oregon 1st,51,28,6.46,billion,15.11,135.64,54.9
+1739,Oregon 2nd,69,51,2.67,billion,11.12,55.97,73.9
+1744,Oregon 3rd,36,13,6.97,billion,15.46,146.31,36.1
+1748,Oregon 4th,59,43,2.5,billion,10.82,52.55,72.9
+1753,Oregon 5th,58,31,4.04,billion,12.64,84.74,53.4
+1757,Oregon 6th,55,34,4.02,billion,12.74,84.41,61.8
+1761,Pennsylvania 1st,68,27,26.01,billion,44.96,546.31,39.7
+1767,Pennsylvania 2nd,37,7,31.88,billion,50.61,669.51,18.9
+1771,Pennsylvania 3rd,41,6,36.37,billion,54.22,763.83,14.6
+1775,Pennsylvania 4th,75,35,26.99,billion,45.16,566.87,46.7
+1781,Pennsylvania 5th,79,19,32.1,billion,50.76,674.15,24.1
+1787,Pennsylvania 6th,78,37,24.91,billion,43.15,523.01,47.4
+1793,Pennsylvania 7th,78,34,22.82,billion,41.63,479.17,43.6
+1799,Pennsylvania 8th,74,38,21.36,billion,40.41,448.51,51.4
+1805,Pennsylvania 9th,106,66,10.64,billion,29.85,223.48,62.3
+1812,Pennsylvania 10th,73,34,23.78,billion,42.82,499.42,46.6
+1818,Pennsylvania 11th,61,29,20.84,billion,39.83,437.64,47.5
+1824,Pennsylvania 12th,91,43,27.46,billion,46.37,576.58,47.3
+1830,Pennsylvania 13th,104,64,24.52,billion,43.58,515.02,61.5
+1837,Pennsylvania 14th,113,74,24.5,billion,43.51,514.5,65.5
+1844,Pennsylvania 15th,86,54,10.37,billion,29.57,217.85,62.8
+1850,Pennsylvania 16th,96,62,23.1,billion,42.16,485.17,64.6
+1857,Pennsylvania 17th,136,86,24.73,billion,43.61,519.41,63.2
+1864,Rhode Island 1st,29,15,2.35,billion,9.05,49.33,51.7
+1869,Rhode Island 2nd,25,20,1.61,billion,8.58,33.83,80
+1874,South Carolina 1st,43,17,12.65,billion,16.38,265.75,39.5
+1879,South Carolina 2nd,43,22,3.61,billion,7.4,75.85,51.2
+1884,South Carolina 3rd,44,20,4.46,billion,8.49,93.75,45.5
+1889,South Carolina 4th,49,22,4.79,billion,9.44,100.55,44.9
+1894,South Carolina 5th,46,26,4.53,billion,8.58,95.08,56.5
+1899,South Carolina 6th,62,33,13.63,billion,17.32,286.31,53.2
+1905,South Carolina 7th,38,19,8.03,billion,11.75,168.6,50
+1910,South Dakota 0th,161,139,3.62,billion,5.67,76.11,86.3
+1917,Tennessee 1st,45,21,4.9,billion,11.97,102.99,46.7
+1921,Tennessee 2nd,39,14,7.01,billion,13.95,147.19,35.9
+1925,Tennessee 3rd,33,21,3.55,billion,10.61,74.48,63.6
+1929,Tennessee 4th,32,20,4.22,billion,11.3,88.69,62.5
+1933,Tennessee 5th,36,13,11.54,billion,18.63,242.24,36.1
+1937,Tennessee 6th,47,35,4.81,billion,11.86,101.06,74.5
+1941,Tennessee 7th,41,18,11.82,billion,18.86,248.18,43.9
+1945,Tennessee 8th,55,40,5.61,billion,12.49,117.87,72.7
+1949,Tennessee 9th,21,4,5.02,billion,11.97,105.35,19
+1953,Texas 1st,119,77,16.76,billion,32.73,351.95,64.7
+1959,Texas 2nd,183,106,38.39,billion,55.65,806.24,57.9
+1967,Texas 3rd,104,36,32.23,billion,50.11,676.76,34.6
+1973,Texas 4th,109,56,18.34,billion,34.62,385.18,51.4
+1979,Texas 5th,103,45,13.04,billion,29.27,273.86,43.7
+1985,Texas 6th,108,67,13.27,billion,29.53,278.77,62
+1991,Texas 7th,118,55,38.47,billion,55.63,807.91,46.6
+1997,Texas 8th,200,124,34.34,billion,51.42,721.22,62
+2005,Texas 9th,115,46,44.56,billion,61.48,935.71,40
+2011,Texas 10th,163,87,24.62,billion,41.11,516.96,53.4
+2018,Texas 11th,91,56,20.73,billion,36.78,435.27,61.5
+2023,Texas 12th,75,22,38.21,billion,56.11,802.45,29.3
+2028,Texas 13th,129,91,10.03,billion,26.21,210.54,70.5
+2034,Texas 14th,128,71,18.88,billion,34.87,396.56,55.5
+2040,Texas 15th,83,43,15.11,billion,31.3,317.32,51.8
+2045,Texas 16th,44,23,15.94,billion,31.95,334.65,52.3
+2049,Texas 17th,149,100,12.52,billion,28.64,262.83,67.1
+2056,Texas 18th,112,57,42.28,billion,59.34,887.8,50.9
+2062,Texas 19th,147,105,7.7,billion,23.87,161.69,71.4
+2069,Texas 20th,39,9,32.39,billion,48.21,680.29,23.1
+2073,Texas 21st,96,42,16.66,billion,32.69,349.88,43.8
+2079,Texas 22nd,217,118,30.74,billion,46.97,645.46,54.4
+2087,Texas 23rd,118,65,18.16,billion,34.25,381.39,55.1
+2093,Texas 24th,80,18,50.12,billion,67.79,"1,052.45",22.5
+2098,Texas 25th,110,60,26.25,billion,42.23,551.25,54.5
+2104,Texas 26th,125,66,22.43,billion,40.43,470.97,52.8
+2110,Texas 27th,129,72,14.63,billion,30.7,307.33,55.8
+2116,Texas 28th,71,36,10.32,billion,26.52,216.68,50.7
+2121,Texas 29th,80,37,28.9,billion,45.91,606.82,46.2
+2126,Texas 30th,55,13,34.98,billion,52.61,734.6,23.6
+2131,Texas 31st,148,73,25.27,billion,42.36,530.61,49.3
+2138,Texas 32nd,76,16,47.17,billion,64.69,990.61,21.1
+2143,Texas 33rd,66,17,44.38,billion,62.04,931.91,25.8
+2148,Texas 34th,79,52,9.32,billion,25.65,195.62,65.8
+2153,Texas 35th,117,36,48.27,billion,64.53,"1,013.62",30.8
+2159,Texas 36th,111,52,18.05,billion,34.37,379.12,46.8
+2165,Texas 37th,58,16,34.53,billion,51.27,725.15,27.6
+2170,Texas 38th,147,87,42.44,billion,59.63,891.29,59.2
+2177,Utah 1st,71,31,9.77,billion,14.75,205.27,43.7
+2182,Utah 2nd,68,30,6.38,billion,11.5,134.06,44.1
+2187,Utah 3rd,82,41,6.15,billion,11.2,129.16,50
+2192,Utah 4th,61,41,6.3,billion,11.19,132.32,67.2
+2197,Virginia 1st,47,10,15.07,billion,31.92,316.56,21.3
+2202,Virginia 2nd,41,5,15.24,billion,32.12,320.03,12.2
+2206,Virginia 3rd,42,2,15.44,billion,32.28,324.17,4.8
+2210,Virginia 4th,36,8,11.99,billion,28.96,251.69,22.2
+2214,Virginia 5th,40,8,11.86,billion,28.74,249.14,20
+2218,Virginia 6th,42,5,10.45,billion,27.22,219.37,11.9
+2222,Virginia 7th,38,13,9.28,billion,26.17,194.85,34.2
+2226,Virginia 8th,27,3,14.46,billion,31.46,303.75,11.1
+2230,Virginia 9th,23,7,8.5,billion,25.41,178.4,30.4
+2234,Virginia 10th,26,8,5.04,billion,22.23,105.84,30.8
+2238,Virginia 11th,28,2,13.43,billion,30.43,282.11,7.1
+2242,Vermont 0th,8,3,1.62,billion,3.05,33.95,37.5
+2245,Washington 1st,52,21,15.7,billion,43.69,329.74,40.4
+2249,Washington 2nd,60,35,5.93,billion,35.16,124.56,58.3
+2255,Washington 3rd,67,40,5.65,billion,34.89,118.7,59.7
+2260,Washington 4th,66,41,3.83,billion,33.23,80.49,62.1
+2265,Washington 5th,55,36,7.14,billion,36.37,149.96,65.5
+2269,Washington 6th,76,47,8.18,billion,37.41,171.78,61.8
+2274,Washington 7th,37,8,22.02,billion,49.94,462.47,21.6
+2278,Washington 8th,78,38,15.03,billion,44.15,315.65,48.7
+2283,Washington 9th,50,14,22.61,billion,50.52,474.91,28
+2287,Washington 10th,41,21,8.86,billion,38.01,186.1,51.2
+2292,Wisconsin 1st,115,80,6.05,billion,17.96,127.01,69.6
+2298,Wisconsin 2nd,128,87,6.46,billion,17.38,135.66,68
+2304,Wisconsin 3rd,158,132,4.59,billion,15.48,96.34,83.5
+2311,Wisconsin 4th,39,17,7.84,billion,19.7,164.65,43.6
+2315,Wisconsin 5th,113,83,5.93,billion,16.87,124.6,73.5
+2321,Wisconsin 6th,151,113,5.81,billion,16.73,121.98,74.8
+2328,Wisconsin 7th,164,141,4.41,billion,15.35,92.62,86
+2335,West Virginia 1st,23,14,2.22,billion,5.34,46.63,60.9
+2340,West Virginia 2nd,42,21,2.84,billion,6.01,59.67,50
+2344,Wyoming 0th,17,11,0.78,billion,1.82,16.37,64.7
+1,Wisconsin 8th,,,4.86,billion,15.89,102.16,77.4
+1,Wisconsin 8th,,,,,,,
+1,Wisconsin 8th,,,,,,,
+1,Wisconsin 8th,,,,,,,
+1,Wisconsin 8th,,,,,,,
+1,Wisconsin 8th,,,,,,,
+1,Wisconsin 8th,,,,,,,
+1,Wisconsin 8th,146,113,4.86,billion,15.89,102.16,77.4

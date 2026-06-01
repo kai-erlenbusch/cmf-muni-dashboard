@@ -1,0 +1,19 @@
+{
+  "name": "cmf-muni-dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "d3": "^7.8.5",
+    "maplibre-gl": "^3.6.2",
+    "pmtiles": "^2.11.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.1.0",
+    "vite": "^5.0.0"
+  }
+}
